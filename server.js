@@ -16,6 +16,12 @@ app.get('/notes', (req, res) => {
 app.post('/notes', (req, res) => {
   const { title, body } = req.body;
   if (!title) return res.status(400).json({ error: 'title is required' });
+  if (typeof title !== 'string') {
+    return res.status(400).json({ error: 'title must be a string' });
+  }
+  if (body !== undefined && typeof body !== 'string') {
+    return res.status(400).json({ error: 'body must be a string' });
+  }
   res.status(201).json(db.create(title, body || ''));
 });
 

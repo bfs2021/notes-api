@@ -44,3 +44,23 @@ test('DELETE of a non-numeric id returns 404, not a driver error', async () => {
   assert.strictEqual(bad.status, 404);
   assert.deepStrictEqual(await bad.json(), { error: 'not found' });
 });
+
+test('POST rejects a non-string title with 400 instead of a driver 500', async () => {
+  const bad = await fetch(`${base}/notes`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ title: 42 }),
+  });
+  assert.strictEqual(bad.status, 400);
+  assert.deepStrictEqual(await bad.json(), { error: 'title must be a string' });
+});
+
+test('POST rejects a non-string body with 400 instead of a driver 500', async () => {
+  const bad = await fetch(`${base}/notes`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ title: 'valid', body: [] }),
+  });
+  assert.strictEqual(bad.status, 400);
+  assert.deepStrictEqual(await bad.json(), { error: 'body must be a string' });
+});
