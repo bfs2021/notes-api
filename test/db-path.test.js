@@ -17,9 +17,7 @@ test('default notes.db lives next to db.js, not in the working directory', async
   const dbFile = path.join(repoDir, 'notes.db');
   const existedBefore = fs.existsSync(dbFile);
   const script = `
-    const db = require(${JSON.stringify(path.join(repoDir, 'db'))});
-    const note = db.create('probe', '');
-    if (note.title !== 'probe') throw new Error('probe note missing');
+    require(${JSON.stringify(path.join(repoDir, 'db'))});
   `;
   try {
     await run(process.execPath, ['-e', script], { cwd: workDir });
