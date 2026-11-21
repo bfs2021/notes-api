@@ -14,6 +14,8 @@ const repoDir = path.join(__dirname, '..');
 
 test('default notes.db lives next to db.js, not in the working directory', async () => {
   const workDir = fs.mkdtempSync(path.join(os.tmpdir(), 'notes-api-cwd-'));
+  const dbFile = path.join(repoDir, 'notes.db');
+  const existedBefore = fs.existsSync(dbFile);
   const script = `
     const db = require(${JSON.stringify(path.join(repoDir, 'db'))});
     const note = db.create('probe', '');
@@ -23,10 +25,10 @@ test('default notes.db lives next to db.js, not in the working directory', async
     await run(process.execPath, ['-e', script], { cwd: workDir });
     assert.strictEqual(fs.existsSync(path.join(workDir, 'notes.db')), false,
       'no database must be created in the working directory');
-    assert.strictEqual(fs.existsSync(path.join(repoDir, 'notes.db')), true,
+    assert.strictEqual(fs.existsSync(dbFile), true,
       'the database must live next to db.js');
   } finally {
-    fs.rmSync(path.join(repoDir, 'notes.db'), { force: true });
+    if (!existedBefore) fs.rmSync(dbFile, { force: true });
     fs.rmSync(workDir, { recursive: true, force: true });
   }
 });

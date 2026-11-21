@@ -20,6 +20,7 @@ npm start
 ```
 
 Set ```PORT``` to move it. The SQLite file is created on first write.
+The default file is ```notes.db``` beside ```db.js```; set ```NOTES_DB``` to override.
 
 ## Endpoints
 
